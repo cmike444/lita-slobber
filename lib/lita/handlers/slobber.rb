@@ -29,7 +29,7 @@ module Lita
       end
 
       def get_channel(response)
-        response.reply "#{response.message.source.room_object.inspect}"
+        response.reply "#{response.message.source.room_object.name}"
       end
 
     end
