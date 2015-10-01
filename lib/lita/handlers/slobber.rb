@@ -4,10 +4,10 @@ module Lita
   module Handlers
     class Slobber < Handler
 
-      route(/^start taking notes/, :start_taking_notes, help: {
+      route(/^start taking notes/, :start_taking_notes, command: true, help: {
         "start taking notes" => "Starts recording conversation until the `stop taking notes` command is given."
         })
-      route(/^stop taking notes/, :stop_taking_notes, help: {
+      route(/^stop taking notes/, :stop_taking_notes, command: true, help: {
         "stop taking notes" => "Stops recording conversation after the `start taking notes` command is given."
         })
       route(/^get channel/, :get_channel, command: true, help: {
@@ -15,10 +15,15 @@ module Lita
         })
 
       def start_taking_notes(response)
-        start_marker = Time.now
+        start = Time.now
         channel = get_channel(response)
-        redis.set(channel.id, start_marker)
-        response.reply "Alright, it's #{start_marker.strftime('%l:%M %P')} and I'm ready to take notes."
+        store_notes_session(channel)
+
+        response.reply "Alright, it's #{start.strftime('%l:%M %P')} and I'm ready to take notes."
+      end
+
+      def store_notes_session(channel, start)
+        redis.set(channel.id, start)
       end
 
       def stop_taking_notes(response)
@@ -54,8 +59,6 @@ module Lita
           resolution.join(' ')
         end
       end
-
-      private
 
       def get_channel(response)
         response.message.source.room_object
