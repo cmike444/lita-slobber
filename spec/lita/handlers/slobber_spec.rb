@@ -1,4 +1,5 @@
 require "spec_helper"
+require "securerandom"
 
 describe Lita::Handlers::Slobber, lita_handler: true do
   it { is_expected.to route_command("start taking notes").to(:start_taking_notes) }
