@@ -17,20 +17,15 @@ module Lita
       def start_taking_notes(response)
         start = Time.now
         channel = get_channel(response)
-        store_notes_session(channel)
-
+        redis.set(channel.id, start)
         response.reply "Alright, it's #{start.strftime('%l:%M %P')} and I'm ready to take notes."
       end
 
-      def store_notes_session(channel, start)
-        redis.set(channel.id, start)
-      end
-
       def stop_taking_notes(response)
-        stop_marker = Time.now
+        stop = Time.now
         channel = get_channel(response)
-        start_marker = redis.get(channel.id)
-        response.reply  "Ok, it's #{stop_marker.strftime('%l:%M %P')} and I'm done taking notes. I'll have the notes from the last #{time_ago_in_words(start, stop)} compiled and sent out in a jiffy!"
+        start = redis.get(channel.id)
+        response.reply  "Ok, it's #{stop.strftime('%l:%M %P')} and I'm done taking notes. I'll have the notes from the last #{time_ago_in_words(start, stop)} compiled and sent out in a jiffy!"
       end
 
       def time_ago_in_words(t1, t2)
