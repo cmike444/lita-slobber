@@ -5,13 +5,13 @@ module Lita
     class Slobber < Handler
 
       route(/^start taking notes/, :start_taking_notes, help: {
-        "bob: start taking notes" => "Starts recording conversation until the `stop taking notes` command is given."
+        "start taking notes" => "Starts recording conversation until the `stop taking notes` command is given."
         })
       route(/^stop taking notes/, :stop_taking_notes, help: {
-        "bob: stop taking notes" => "Stops recording conversation after the `start taking notes` command is given."
+        "stop taking notes" => "Stops recording conversation after the `start taking notes` command is given."
         })
       route(/^get channel/, :get_channel, command: true, help: {
-        "bob: get channel" => "Replies with CHANNEL"
+        "get channel" => "Replies with CHANNEL"
         })
 
       def start_taking_notes(response)
@@ -29,7 +29,7 @@ module Lita
       end
 
       def get_channel(response)
-        response.reply "#{response.message.source.room_object}"
+        response.reply "#{response.message.source.room_object.inspect}"
       end
 
     end
