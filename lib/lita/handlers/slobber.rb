@@ -32,8 +32,8 @@ module Lita
         response.message.source.room_object
       end
 
-      def chat_service(request, response)
-        p robot.chat_service.api
+      def chat_service(response)
+        p response.user.metadata.inspect
       end
 
     end
