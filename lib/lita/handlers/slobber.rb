@@ -10,12 +10,12 @@ module Lita
       route(/^stop taking notes/, :stop_taking_notes, command: true, help: {
         "stop taking notes" => "Stops recording conversation after the `start taking notes` command is given."
         })
-      route(/^test/, :test, command: true)
 
       def start_taking_notes(response)
         channel = get_channel(response)
+        redis.set(channel.id, Time.now.to_i)
+
         username = get_reply_to_name(response)
-        redis.set(channel.id, Time.now)
 
         taking_notes = [
           "Alright #{username}, I'm ready to take notes.",
@@ -33,7 +33,7 @@ module Lita
       end
 
       def stop_taking_notes(response)
-        stop = Time.now
+        stop = Time.now.to_i
         channel = get_channel(response)
         start = redis.get(channel.id)
         response.reply  "Ok, cool. I'll have your notes compiled and sent out in a jiffy!"
@@ -49,13 +49,6 @@ module Lita
 
       def is_private_message?(response)
         response.message.source.private_message
-      end
-
-      on :connected, :greet
-
-      def greet(payload)
-        target = Source.new(room: payload[:room])
-        robot.send_message(target, "Hello #{payload[:room]}!")
       end
 
     end
