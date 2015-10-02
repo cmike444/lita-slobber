@@ -16,7 +16,7 @@ describe Lita::Handlers::Slobber, lita_handler: true do
   describe '#stop_taking_notes' do
     it "stops taking notes" do
       send_command("stop taking notes")
-      expect(replies.last).to eq("Ok, it's #{Time.now.strftime('%l:%M %P')} and I'm done taking notes.")
+      expect(replies.last).to eq("Ok, cool. I'll have the notes compiled and sent out in a jiffy!")
     end
   end
 end

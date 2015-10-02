@@ -10,6 +10,9 @@ module Lita
       route(/^stop taking notes/, :stop_taking_notes, command: true, help: {
         "stop taking notes" => "Stops recording conversation after the `start taking notes` command is given."
         })
+      route(/^chat/, :chat_service, command: true, help: {
+        "chat" => "Shows chat service api"
+        })
 
       def start_taking_notes(response)
         start = Time.now
@@ -22,11 +25,15 @@ module Lita
         stop = Time.now
         channel = get_channel(response)
         start = redis.get(channel.id)
-        response.reply  "Ok, it's #{stop.strftime('%l:%M %P')} and I'm done taking notes. I'll have the notes compiled and sent out in a jiffy!"
+        response.reply  "Ok, cool. I'll have the notes compiled and sent out in a jiffy!"
       end
 
       def get_channel(response)
         response.message.source.room_object
+      end
+
+      def chat_service(response)
+        p "#{robot.chat_service.inspect}"
       end
 
     end
