@@ -10,23 +10,33 @@ module Lita
       route(/^stop taking notes/, :stop_taking_notes, command: true, help: {
         "stop taking notes" => "Stops recording conversation after the `start taking notes` command is given."
         })
-      route(/^chat/, :chat_service, command: true, help: {
-        "chat" => "Shows chat service api"
-        })
+      route(/^test/, :test, command: true)
 
       def start_taking_notes(response)
-        start = Time.now
         channel = get_channel(response)
-        reply_to_name = get_reply_to_name(response)
-        redis.set(channel.id, start)
-        response.reply "Alright #{reply_to_name}, it's #{start.strftime('%l:%M %P')} and I'm ready to take notes."
+        username = get_reply_to_name(response)
+        redis.set(channel.id, Time.now)
+
+        taking_notes = [
+          "Alright #{username}, I'm ready to take notes.",
+          "Ok, sounds good. Ready when you are, #{username}!",
+          "I'm already on top of it, #{username}!",
+          "Alright, well then start typing #{username}!",
+          "For shizzle #{username}.",
+          "Yeah. That's my job, #{username}.",
+          "Alright, #{username}. I've got you covered!",
+          "You bet, #{username}.",
+          "That I can do, #{username}."
+        ]
+
+        response.reply taking_notes.sample
       end
 
       def stop_taking_notes(response)
         stop = Time.now
         channel = get_channel(response)
         start = redis.get(channel.id)
-        response.reply  "Ok, cool. I'll have the notes compiled and sent out in a jiffy!"
+        response.reply  "Ok, cool. I'll have your notes compiled and sent out in a jiffy!"
       end
 
       def get_channel(response)
@@ -35,6 +45,17 @@ module Lita
 
       def get_reply_to_name(response)
         response.user.metadata['mention_name'].nil? ? "#{response.user.name}" : "#{response.user.metadata['mention_name']}"
+      end
+
+      def is_private_message?(response)
+        response.message.source.private_message
+      end
+
+      on :connected, :greet
+
+      def greet(payload)
+        target = Source.new(room: payload[:room])
+        robot.send_message(target, "Hello #{payload[:room]}!")
       end
 
     end
