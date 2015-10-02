@@ -17,8 +17,9 @@ module Lita
       def start_taking_notes(response)
         start = Time.now
         channel = get_channel(response)
+        reply_to_name = get_reply_to_name(response)
         redis.set(channel.id, start)
-        response.reply "Alright, it's #{start.strftime('%l:%M %P')} and I'm ready to take notes."
+        response.reply "Alright #{reply_to_name}, it's #{start.strftime('%l:%M %P')} and I'm ready to take notes."
       end
 
       def stop_taking_notes(response)
@@ -32,8 +33,8 @@ module Lita
         response.message.source.room_object
       end
 
-      def chat_service(response)
-        p response.user.metadata.inspect
+      def get_reply_to_name(response)
+        response.user.metadata['mention_name'].nil? ? "#{response.user.name}" : "#{response.user.metadata['mention_name']}"
       end
 
     end
