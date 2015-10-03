@@ -81,7 +81,7 @@ module Lita
       end
 
       def is_taking_notes(channel)
-        redis.get(channel.id) ? true : false
+        redis.get(channel.id) ? return true : return false
       end
 
       def is_private_message(response)
