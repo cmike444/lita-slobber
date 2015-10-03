@@ -60,8 +60,6 @@ module Lita
         else
           response.reply "I was never taking notes in the first place..."
         end
-        
-        File.open("tmp/#{channel.id}/notes_session.log", 'w')
       end
 
       def take_notes(response)
@@ -74,6 +72,7 @@ module Lita
             f.puts "[#{Time.now.to_i}] [#{response.user.name}] #{response.message.body}"
           end
         else
+          File.open("tmp/#{channel.id}/notes_session.log", 'w')
           return
         end
       end
