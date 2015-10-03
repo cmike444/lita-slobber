@@ -62,14 +62,15 @@ module Lita
       end
 
       def notes(response)
-        channel = get_channel(response)
-        unless is_taking_notes(channel)
-          FileUtils.mkdir_p("tmp/#{channel.id}") unless Dir.exists?("tmp/#{channel.id}")
+        # channel = get_channel(response)
+        # unless is_taking_notes(channel)
+        #   FileUtils.mkdir_p("tmp/#{channel.id}") unless Dir.exists?("tmp/#{channel.id}")
           
-          File.open("tmp/#{channel.id}/notes_session.log", 'w+') do |f|
-            f.puts "[#{Time.now.to_i}] - [#{response.user.name}: #{response.message.body}"
-          end
-        end
+        #   File.open("tmp/#{channel.id}/notes_session.log", 'w+') do |f|
+        #     f.puts "[#{Time.now.to_i}] - [#{response.user.name}: #{response.message.body}"
+        #   end
+        # end
+        puts "took notes"
       end
 
       def get_channel(response)
