@@ -64,7 +64,7 @@ module Lita
       def take_notes(response)
         channel = get_channel(response)
         if is_taking_notes(channel)          
-          File.open("tmp/#{channel.id}/notes_session.log", 'a') do |f|
+          File.open("tmp/#{channel.id}/notes_session.log", 'w+') do |f|
             f.puts "[#{Time.now.to_i}] - [#{response.user.name}: #{response.message.body}"
           end
         end
