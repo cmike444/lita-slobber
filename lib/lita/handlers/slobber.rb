@@ -9,10 +9,10 @@ module Lita
       route(/.*/, :take_notes)
 
       route(/start taking notes|start notes|take notes|listen up/, :start_taking_notes, command: true, help: {
-        "start taking notes" => "Starts taking notes. **Aliases:** `start notes` `take notes` **Stop:** `stop taking notes`",
+        "start taking notes" => "Starts taking notes. *Aliases:* `start notes` `take notes` *Stop:* `stop taking notes`",
         })
       route(/stop taking notes|stop notes|end notes|finish notes/, :stop_taking_notes, command: true, help: {
-        "stop taking notes" => "Stops taking only after `start taking notes` command has been given. **Aliases:** `stop notes` `finish notes`",
+        "stop taking notes" => "Stops taking only after `start taking notes` command has been given. *Aliases:* `stop notes` `finish notes`",
         })
 
       def start_taking_notes(response)
