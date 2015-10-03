@@ -48,7 +48,7 @@ module Lita
         if is_taking_notes(channel)
           start = redis.get(channel.id)
           redis.del(channel.id)
-          File.truncate("/tmp/#{channel.id}/notes_session.log", 0)
+          File.open("tmp/#{channel.id}/notes_session.log", 'w')
 
           stopped_taking_notes = [
             "Ok, cool. I've compiled your notes and sent them out!",
