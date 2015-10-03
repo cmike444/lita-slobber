@@ -21,6 +21,7 @@ module Lita
         if is_taking_notes(channel)
           response.reply "You already asked me to take notes."
         else
+          File.truncate("/tmp/#{channel.id}/notes_session.log", 0)
           redis.set(channel.id, Time.now.to_i)
           username = get_reply_to_name(response)
 
@@ -48,7 +49,6 @@ module Lita
         if is_taking_notes(channel)
           start = redis.get(channel.id)
           redis.del(channel.id)
-          File.truncate("/tmp/#{channel.id}/notes_session.log", 0)
 
           stopped_taking_notes = [
             "Ok, cool. I've compiled your notes and sent them out!",
@@ -56,7 +56,7 @@ module Lita
             "Alright, I'll get your notes put together and sent out right away!",
             "Awesome, you'll see the notes in your email shortly."
           ]
-
+          File.truncate("/tmp/#{channel.id}/notes_session.log", 0)
           response.reply  stopped_taking_notes.sample
         else
           response.reply "I was never taking notes in the first place..."
