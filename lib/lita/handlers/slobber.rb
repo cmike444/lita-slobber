@@ -60,7 +60,8 @@ module Lita
         end
       end
 
-      def notes(channel)
+      def notes(response)
+        channel = get_channel(response)
         unless is_taking_notes(channel)
           FileUtils.mkdir_p("tmp/#{channel.id}") unless Dir.exists?("tmp/#{channel.id}")
           
