@@ -64,12 +64,15 @@ module Lita
       end
 
       def take_notes(response)
-        channel = get_channel(response)
-        unless is_taking_notes(channel) 
-          FileUtils.mkdir_p("tmp/#{channel.id}") unless Dir.exists?("tmp/#{channel.id}")         
-          File.open("tmp/#{channel.id}/notes_session.log", 'a') do |f|
-            f.puts "[#{Time.now.to_i}] [#{response.user.name}] #{response.message.body}"
-          end
+        # channel = get_channel(response)
+        if is_taking_notes(channel)
+          # FileUtils.mkdir_p("tmp/#{channel.id}") unless Dir.exists?("tmp/#{channel.id}")         
+          # File.open("tmp/#{channel.id}/notes_session.log", 'a') do |f|
+          #   f.puts "[#{Time.now.to_i}] [#{response.user.name}] #{response.message.body}"
+          # end
+          response.reply "True"
+        else
+          response.reply "False"
         end
       end
 
