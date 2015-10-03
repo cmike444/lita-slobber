@@ -9,7 +9,7 @@ module Lita
       route(/.*/, :take_notes)
 
       route(/start taking notes|start notes|take notes|listen up/, :start_taking_notes, command: true, help: {
-        "start taking notes" => "Starts taking notes. *Aliases:* `start notes` `take notes` *Stop:* `stop taking notes`",
+        "start taking notes" => "Starts taking notes. *Aliases:* `start notes` `take notes`",
         })
       route(/stop taking notes|stop notes|end notes|finish notes/, :stop_taking_notes, command: true, help: {
         "stop taking notes" => "Stops taking only after `start taking notes` command has been given. *Aliases:* `stop notes` `finish notes`",
@@ -17,35 +17,13 @@ module Lita
 
       def start_taking_notes(response)
         channel = get_channel(response)
-        
+        username = get_reply_to_name(response)
+
         if is_taking_notes(channel)
-
-          already_taking_notes = [
-            "I've been taking notes...",
-            "You already asked me to take notes...",
-            "Yeah, I've been doing that...",
-            "Uh huh, that's what I'm doing right now..."
-          ]
-
-          response.reply already_taking_notes.sample
+          response.reply already_taking_notes_response(username)
         else
           redis.set(channel.id, Time.now.to_i)
-          username = get_reply_to_name(response)
-
-          started_taking_notes = [
-            "Alright #{username}, I'm ready to take notes.",
-            "Ok, sounds good. Ready when you are, #{username}!",
-            "I'm already on top of it, #{username}!",
-            "Alright, well then start typing #{username}!",
-            "For shizzle #{username}.",
-            "Uh.. Yeah. That's my job, #{username}.",
-            "Alright, #{username}. I've got you covered!",
-            "You bet, #{username}.",
-            "That I can do, #{username}.",
-            "If you say so, #{username}."
-          ]
-
-          response.reply started_taking_notes.sample
+          response.reply started_taking_notes_response(username)
         end
       end
 
@@ -62,9 +40,9 @@ module Lita
             "Right on, I'll send out the notes in a jiffy!",
             "Alright, I'll get your notes put together and sent out right away!",
             "Awesome, you'll see the notes in your email shortly."
-          ]
+          ].sample
 
-          response.reply  stopped_taking_notes.sample
+          response.reply  stopped_taking_notes
         else
 
           not_taking_notes = [
@@ -72,9 +50,9 @@ module Lita
             "You already asked me to take notes...",
             "Yeah, I've been doing that...",
             "Uh huh, that's what I'm doing right now..."
-          ]
+          ].sample
 
-          response.reply not_taking_notes.sample
+          response.reply not_taking_notes
         end
       end
 
@@ -91,6 +69,32 @@ module Lita
           File.open("tmp/#{channel.id}/notes_session.log", 'w')
           return
         end
+      end
+
+      def started_taking_notes_response(username)
+        started_taking_notes = [
+            "Alright #{username}, I'm ready to take notes.",
+            "Ok, sounds good. Ready when you are, #{username}!",
+            "I'm already on top of it, #{username}!",
+            "Alright, well then start typing #{username}!",
+            "For shizzle #{username}.",
+            "Uh.. Yeah. That's my job, #{username}.",
+            "Alright, #{username}. I've got you covered!",
+            "You bet, #{username}.",
+            "That I can do, #{username}.",
+            "If you say so, #{username}."
+          ].sample
+          started_taking_notes
+      end
+
+      def already_taking_notes_response(username)
+        already_taking_notes = [
+            "I've been taking notes, #{username}...",
+            "You already asked me to take notes #{username}...",
+            "Yeah #{username}, I've been doing that...",
+            "Uh huh, that's what I'm doing #{username}..."
+          ].sample
+          already_taking_notes
       end
 
       def get_channel(response)
