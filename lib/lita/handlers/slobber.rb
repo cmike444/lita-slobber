@@ -8,18 +8,30 @@ module Lita
 
       route(/.*/, :take_notes)
 
-      route(/^start taking notes/, :start_taking_notes, command: true, help: {
-        "start taking notes" => "Starts recording conversation until the `stop taking notes` command is given."
+      route(/start taking notes|start notes|take notes|listen up/, :start_taking_notes, command: true, help: {
+        "start taking notes" => "Starts recording conversation until the `stop taking notes` command is given.",
+        "start notes" => "Starts recording conversation until the `stop taking notes` command is given.",
+        "take notes" => "Starts recording conversation until the `stop taking notes` command is given."
         })
-      route(/^stop taking notes/, :stop_taking_notes, command: true, help: {
-        "stop taking notes" => "Stops recording conversation after the `start taking notes` command is given."
+      route(/stop taking notes|stop notes|end notes|finish notes/, :stop_taking_notes, command: true, help: {
+        "stop taking notes" => "Stops recording conversation after the `start taking notes` command is given.",
+        "stop notes" => "Stops recording conversation after the `start taking notes` command is given.",
+        "finish notes" => "Stops recording conversation after the `start taking notes` command is given."
         })
 
       def start_taking_notes(response)
         channel = get_channel(response)
         
         if is_taking_notes(channel)
-          response.reply "You already asked me to take notes."
+
+          already_taking_notes = [
+            "I've been taking notes...",
+            "You already asked me to take notes...",
+            "Yeah, I've been doing that...",
+            "Uh huh, that's what I'm doing right now..."
+          ]
+
+          response.reply already_taking_notes.sample
         else
           redis.set(channel.id, Time.now.to_i)
           username = get_reply_to_name(response)
@@ -58,7 +70,15 @@ module Lita
 
           response.reply  stopped_taking_notes.sample
         else
-          response.reply "I was never taking notes in the first place..."
+
+          not_taking_notes = [
+            "You haven't told me to `start taking notes` yet...",
+            "You already asked me to take notes...",
+            "Yeah, I've been doing that...",
+            "Uh huh, that's what I'm doing right now..."
+          ]
+
+          response.reply not_taking_notes.sample
         end
       end
 
