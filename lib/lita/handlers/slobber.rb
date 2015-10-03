@@ -6,7 +6,7 @@ module Lita
   module Handlers
     class Slobber < Handler
 
-      route(/^.*/, :take_notes)
+      route(/.*/, :take_notes)
 
       route(/^start taking notes/, :start_taking_notes, command: true, help: {
         "start taking notes" => "Starts recording conversation until the `stop taking notes` command is given."
@@ -64,12 +64,12 @@ module Lita
 
       def take_notes(response)
         channel = get_channel(response)
-        if is_taking_notes(channel) 
+        # unless is_taking_notes(channel) 
           FileUtils.mkdir_p("tmp/#{channel.id}") unless Dir.exists?("tmp/#{channel.id}")         
           File.open("tmp/#{channel.id}/notes_session.log", 'w+') do |f|
             f.puts "[#{Time.now.to_i}] - [#{response.user.name}: #{response.message.body}"
           end
-        end
+        # end
       end
 
       def get_channel(response)
