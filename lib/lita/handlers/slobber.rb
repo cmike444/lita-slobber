@@ -1,5 +1,4 @@
 require 'securerandom'
-require 'fileutils'
 require 'lita'
 
 module Lita
@@ -63,10 +62,8 @@ module Lita
 
       def take_notes(response)
         channel = get_channel(response)
-        if is_taking_notes(channel)
-          FileUtils.mkdir_p("tmp/#{channel.id}") unless Dir.exists?("tmp/#{channel.id}")
-          
-          File.open("tmp/#{channel.id}/notes_session.log", 'w+') do |f|
+        if is_taking_notes(channel)          
+          File.open("tmp/#{channel.id}/notes_session.log", 'a') do |f|
             f.puts "[#{Time.now.to_i}] - [#{response.user.name}: #{response.message.body}"
           end
         end
@@ -86,13 +83,6 @@ module Lita
 
       def is_private_message(response)
         response.message.source.private_message
-      end
-
-      on :connected, :greet
-
-      def greet(payload)
-        p "Hellp world!"
-        p payload.inspect
       end
 
     end
