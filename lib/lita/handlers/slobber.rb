@@ -33,6 +33,7 @@ module Lita
 
         if is_taking_notes(channel)
           redis.del(channel.id)
+          File.open("tmp/#{channel.id}/notes_session.log", 'w')
           response.reply  stopped_taking_notes_response(username)
         else
           response.reply not_taking_notes_response(username)
@@ -96,8 +97,8 @@ module Lita
             "You haven't told me to `take notes` yet #{username}...",
             "You never asked me to take notes #{username}...",
             "Sorry #{username}. You didn't ask me to, so I haven't been taking notes...",
-            "Ahh shoot, you sould have told me to `take notes` #{username}...",
-            "Ahh dang, you sould have told me to `start taking notes` #{username}..."
+            "Ahh shoot, I haven't been. You sould have told me to `start taking notes` #{username}...",
+            "Ahh dang, I haven't been. You sould have told me to `take notes` #{username}..."
           ].sample
         response
       end
