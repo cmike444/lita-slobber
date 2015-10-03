@@ -88,7 +88,10 @@ module Lita
         response.message.source.private_message
       end
 
-      on(:connected) do |payload|
+      on :connected, :greet
+
+      def greet(payload)
+        p "Hellp world!"
         p payload.inspect
       end
 
