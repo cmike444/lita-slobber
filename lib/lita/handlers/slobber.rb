@@ -46,6 +46,7 @@ module Lita
         
         if is_taking_notes(channel)
           start = redis.get(channel.id)
+          redis.del(channel.id)
 
           stopped_taking_notes = [
             "Ok, cool. I've compiled your notes and sent them out!",
@@ -53,8 +54,6 @@ module Lita
             "Alright, I'll get your notes put together and sent out right away!",
             "Awesome, you'll see the notes in your email shortly."
           ]
-
-          redis.del(channel.id)
 
           response.reply  stopped_taking_notes.sample
         else
