@@ -54,6 +54,8 @@ module Lita
             "Awesome, you'll see the notes in your email shortly."
           ]
 
+          redis.del(channel.id)
+
           response.reply  stopped_taking_notes.sample
         else
           response.reply "I was never taking notes in the first place..."
