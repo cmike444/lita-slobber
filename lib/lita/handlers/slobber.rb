@@ -1,4 +1,5 @@
 require 'securerandom'
+require 'fileutils'
 require 'lita'
 
 module Lita
@@ -63,7 +64,8 @@ module Lita
 
       def take_notes(response)
         channel = get_channel(response)
-        if is_taking_notes(channel)          
+        if is_taking_notes(channel) 
+          FileUtils.mkdir_p("tmp/#{channel.id}") unless Dir.exists?("tmp/#{channel.id}")         
           File.open("tmp/#{channel.id}/notes_session.log", 'w+') do |f|
             f.puts "[#{Time.now.to_i}] - [#{response.user.name}: #{response.message.body}"
           end
