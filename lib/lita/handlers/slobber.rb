@@ -70,7 +70,6 @@ module Lita
             f.puts "[#{Time.now.to_i}] - [#{response.user.name}: #{response.message.body}"
           end
         end
-        puts "took notes"
       end
 
       def get_channel(response)
@@ -87,6 +86,10 @@ module Lita
 
       def is_private_message(response)
         response.message.source.private_message
+      end
+
+      on(:connected) do |payload|
+        p payload.inspect
       end
 
     end
